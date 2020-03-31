@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Publish') {
             environment {
-                registryCredential = 'Lithium3$'
+                registryCredential = 'sphenrie$'
             }
             steps{
                 script {
@@ -57,7 +57,7 @@ pipeline {
             steps {
                 script{
                     def image_id = registry + ":$BUILD_NUMBER"
-                    sh "ansible-playbook  playbook.yml --extra-vars \"image_id=${image_id}\""
+                    sh "kubectl create -f deployment.yaml"
                 }
             }
         }
