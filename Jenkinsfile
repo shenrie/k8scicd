@@ -57,7 +57,7 @@ pipeline {
             steps {
                 script{
                     def image_id = registry + ":$BUILD_NUMBER"
-                    sh "kubectl create -f deployment.yaml"
+                    sh "kubectl set image deployment hello-deployment go-app=${image_id} -n develop"
                 }
             }
         }
