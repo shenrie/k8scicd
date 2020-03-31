@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: go-app
-        image: ""
+        image: sphenrie/k8scicd:latest
         resources:
           requests:
             cpu: 10m
