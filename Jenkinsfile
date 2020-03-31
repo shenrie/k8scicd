@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Publish') {
             environment {
-                registryCredential = 'sphenrie'
+                registryCredential = '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502'
             }
             steps{
                 script {
