@@ -4,11 +4,12 @@ metadata:
   name: hello-svc
   namespace: develop
 spec:
+  type: NodePort
   selector:
     role: go-app
   ports:
-    - protocol: TCP
-      port: 80
+    - port: 8080
       targetPort: 8080
-      nodePort: 32000
-  type: NodePort
+      name: http
+      
+
