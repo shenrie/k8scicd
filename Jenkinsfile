@@ -13,7 +13,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
       }
         stage('Build') {
           container('build') {
-            steps {
+            stage('Build a go project') {
                 // Create our project directory.
                 sh 'cd ${GOPATH}/src'
                 sh 'mkdir -p ${GOPATH}/src/hello-world'
@@ -21,12 +21,12 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
                 sh 'cp -r ${WORKSPACE}/* ${GOPATH}/src/hello-world'
                 // Build the app.
                 sh 'go build'               
-            }   
+            }  
           }  
         }
         stage('Test') {
           container('build') {
-            steps {                 
+            stage('Test a go project') {               
                 // Create our project directory.
                 sh 'cd ${GOPATH}/src'
                 sh 'mkdir -p ${GOPATH}/src/hello-world'
@@ -43,7 +43,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
             environment {
                 registryCredential = '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502'
             }
-            steps{
+            stage('Publish a go project') {  
                 script {
                     def appimage = docker.build registry + ":$BUILD_NUMBER"
                     docker.withRegistry( '', registryCredential ) {
@@ -54,7 +54,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
             }
         }
         stage ('Deploy') {
-            steps {
+            stage('Deploy a go project') {  
                 script{
                     def image_id = registry + ":$BUILD_NUMBER"
                     sh "kubectl set image deployment hello-deployment go-app=${image_id} -n develop --record"
