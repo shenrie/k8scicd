@@ -12,7 +12,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
 
       environment {
         registry = "sphenrie/k8scicd"
-        GOCACHE = "/tmp"
+        GOPATH = "/tmp"
       }
         stage('Build') {
           container('build') {
