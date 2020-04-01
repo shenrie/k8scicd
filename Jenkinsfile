@@ -1,4 +1,4 @@
-def POD_LABEL = "testpod-${UUID.randomUUID().toString()}"
+def POD_LABEL = "build-${UUID.randomUUID().toString()}"
 podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
         containerTemplate(name: 'build', image: 'jfeng45/k8sdemo-backend:1.0', ttyEnabled: true, command: 'cat')
     ],
