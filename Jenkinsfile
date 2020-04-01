@@ -47,6 +47,11 @@ pipeline {
             }
         }
         stage('Publish') {
+            agent { 
+                docker { 
+                    image 'docker' 
+                }
+            }
             environment {
                 registryCredential = '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502'
             }
