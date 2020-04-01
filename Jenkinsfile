@@ -7,6 +7,9 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
     ]) {
 
     node(POD_LABEL) {
+
+      checkout scm
+
       environment {
         registry = "sphenrie/k8scicd"
         GOCACHE = "/tmp"
