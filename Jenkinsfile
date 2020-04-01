@@ -1,7 +1,10 @@
 def POD_LABEL = "build-${UUID.randomUUID().toString()}"
 podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
     containerTemplate(name: 'build', image: 'golang', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'test', image: 'golang', ttyEnabled: true, command: 'cat')
+  ],
+  volumes: [
+    hostPathVolume(mountPath: '/home/gradle/.gradle', hostPath: '/tmp/jenkins/.gradle'),
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
   ]) {
 
     node(POD_LABEL) {
@@ -13,8 +16,6 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
 
         stage('Build') {
             container('build') {
-              stage('build image') {
-              steps {
                 // Create our project directory.
                 sh 'cd ${GOPATH}/src'
                 sh 'mkdir -p ${GOPATH}/src/hello-world'
@@ -22,14 +23,10 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
                 sh 'cp -r ${WORKSPACE}/* ${GOPATH}/src/hello-world'
                 // Build the app.
                 sh 'go build'               
-              }   
-              }
             }  
         }
         stage('Test') {
-            container('test') {
-              stage('test image') {
-              steps {                 
+            container('build') {               
                 // Create our project directory.
                 sh 'cd ${GOPATH}/src'
                 sh 'mkdir -p ${GOPATH}/src/hello-world'
@@ -38,9 +35,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
                 // Remove cached test results.
                 sh 'go clean -cache'
                 // Run Unit Tests.
-                sh 'go test ./... -v -short' 
-              } 
-              }          
+                sh 'go test ./... -v -short'         
             }
         }
         stage('Publish') {
