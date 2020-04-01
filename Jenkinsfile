@@ -5,7 +5,8 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes',
 containers: [
     containerTemplate(name: 'build', image: 'golang', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'test', image: 'golang', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true)
+    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'kubectl', image: 'bitnami/kubectl', command: 'cat', ttyEnabled: true)
   ],
 volumes: [
     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
@@ -58,8 +59,7 @@ volumes: [
         }
 
         stage('Deploy a Golang project') {
-            agent any
-            steps {
+            container('kubectl')  {  
                 def image_id = registry + ":$BUILD_NUMBER"
                 sh "kubectl set image deployment hello-deployment go-app=${image_id} -n develop --record"
             }
