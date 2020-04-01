@@ -8,7 +8,7 @@ containers: [
     containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true)
   ],
 volumes: [
-    hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
+    hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
   ]) {
 
     node(POD_LABEL) {
@@ -20,15 +20,15 @@ volumes: [
             container('build') {
                 stage('Build') {
 
-		checkout scm
+                    checkout scm
 
-                // Create our project directory.
-                sh 'cd ${GOPATH}/src'
-                sh 'mkdir -p ${GOPATH}/src/hello-world'
-                // Copy all files in our Jenkins workspace to our project directory.                
-                sh 'cp -r ${WORKSPACE}/* ${GOPATH}/src/hello-world'
-                // Build the app.
-                sh 'go build'    
+                    // Create our project directory.
+                    sh 'cd ${GOPATH}/src'
+                    sh 'mkdir -p ${GOPATH}/src/hello-world'
+                    // Copy all files in our Jenkins workspace to our project directory.                
+                    sh 'cp -r ${WORKSPACE}/* ${GOPATH}/src/hello-world'
+                    // Build the app.
+                    sh 'go build'    
                 }
             }
         }
@@ -36,15 +36,15 @@ volumes: [
         stage('Test a Golang project') {
             container('test') {
                 stage('Test') {
-                // Create our project directory.
-                sh 'cd ${GOPATH}/src'
-                sh 'mkdir -p ${GOPATH}/src/hello-world'
-                // Copy all files in our Jenkins workspace to our project directory.                
-                sh 'cp -r ${WORKSPACE}/* ${GOPATH}/src/hello-world'
-                // Remove cached test results.
-                sh 'go clean -cache'
-                // Run Unit Tests.
-                sh 'go test ./... -v -short' 
+                    // Create our project directory.
+                    sh 'cd ${GOPATH}/src'
+                    sh 'mkdir -p ${GOPATH}/src/hello-world'
+                    // Copy all files in our Jenkins workspace to our project directory.                
+                    sh 'cp -r ${WORKSPACE}/* ${GOPATH}/src/hello-world'
+                    // Remove cached test results.
+                    sh 'go clean -cache'
+                    // Run Unit Tests.
+                    sh 'go test ./... -v -short' 
                 }
             }
         }
@@ -60,6 +60,7 @@ volumes: [
                     docker.withRegistry( '', registryCredential ) {
                         appimage.push()
                         appimage.push('latest')
+                    }
                 }
             }
         }
