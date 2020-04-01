@@ -47,26 +47,16 @@ pipeline {
             }
         }
         stage('Publish') {
-            agent { 
-		label 'jenkins-docker'
-            }
             environment {
                 registryCredential = '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502'
             }
             steps{
-                script {
-                    def appimage = docker.build registry + ":$BUILD_NUMBER"
-                    docker.withRegistry( '', registryCredential ) {
-                        appimage.push()
-                        appimage.push('latest')
-                    }
-                }
+		echo 'PUSHING IMAGE IN CONATAINER'
+                sh "docker images sphenrie/k8scicd"
             }
         }
         stage ('Deploy') {
-            agent { 
-		label 'jenkins-docker'
-            }
+	    agent any
             steps {
                 script{
                     def image_id = registry + ":$BUILD_NUMBER"
