@@ -14,7 +14,7 @@ volumes: [
 
     node(POD_LABEL) {
 
-      withEnv(['registry=sphenrie/k8scicd',
+      withEnv(['registry=trow.devops-tools/sphenrie/k8scicd',
             'GOCACHE=/tmp']) {
 
         stage('build a go project') {
@@ -51,9 +51,9 @@ volumes: [
             container('docker') {
 
                 def appimage = docker.build registry + ":$BUILD_NUMBER"
-                docker.withRegistry( '', '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502' ) {
+                docker.withRegistry( 'https://trow.devops-tools:31000', '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502' ) {
                     appimage.push()
-                    appimage.push('latest')
+                    //appimage.push('latest')
                 }
             }
         }
