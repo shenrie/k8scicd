@@ -3,7 +3,7 @@ pipeline {
 
       kubernetes {
         label 'build'  // all your pods will be named with this prefix, followed by a unique id
-        idleMinutes 0  // how long the pod will live after no jobs have run on it
+        idleMinutes 5  // how long the pod will live after no jobs have run on it
         yamlFile 'build-pod.yaml'  // path to the pod definition relative to the root of our project 
         defaultContainer 'jnlp'
       }
@@ -48,6 +48,11 @@ pipeline {
             }
         }
         stage('Publish') {
+            agent { 
+                docker { 
+                    image 'docker' 
+                }
+            }
             environment {
                 registryCredential = '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502'
             }
