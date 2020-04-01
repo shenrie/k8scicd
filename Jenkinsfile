@@ -47,6 +47,11 @@ pipeline {
             }
         }
         stage('Publish') {
+            agent { 
+                docker { 
+                    image 'golang' 
+                }
+            }
             environment {
                 registryCredential = '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502'
             }
@@ -61,6 +66,11 @@ pipeline {
             }
         }
         stage ('Deploy') {
+            agent { 
+                docker { 
+                    image 'golang' 
+                }
+            }
             steps {
                 script{
                     def image_id = registry + ":$BUILD_NUMBER"
