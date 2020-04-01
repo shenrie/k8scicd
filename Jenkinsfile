@@ -1,9 +1,8 @@
 def POD_LABEL = "build-${UUID.randomUUID().toString()}"
 podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
-    containerTemplate(name: 'build', image: 'golang', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'build', image: 'golang', ttyEnabled: true, command: 'cat')
   ],
   volumes: [
-    hostPathVolume(mountPath: '/home/gradle/.gradle', hostPath: '/tmp/jenkins/.gradle'),
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
   ]) {
 
