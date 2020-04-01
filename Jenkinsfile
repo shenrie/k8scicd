@@ -13,8 +13,8 @@ volumes: [
 
     node(POD_LABEL) {
 
-      withEnv([registry = 'sphenrie/k8scicd',
-            GOPATH = '/tmp']) {
+      withEnv(['registry=sphenrie/k8scicd',
+            'GOPATH=/tmp']) {
 
         stage('build a go project') {
             container('build') {
