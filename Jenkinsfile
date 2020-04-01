@@ -4,7 +4,7 @@ def POD_LABEL = "buildpod-${UUID.randomUUID().toString()}"
 podTemplate(label: POD_LABEL, cloud: 'kubernetes', 
 containers: [
     containerTemplate(name: 'build', image: 'golang', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'test', image: 'golang', ttyEnabled: true, command: 'cat')
+    containerTemplate(name: 'test', image: 'golang', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true)
   ],
 volumes: [
