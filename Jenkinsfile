@@ -13,6 +13,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
 
         stage('Build') {
             container('build') {
+              stage('build image') {
               steps {
                 // Create our project directory.
                 sh 'cd ${GOPATH}/src'
@@ -22,10 +23,12 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
                 // Build the app.
                 sh 'go build'               
               }   
+              }
             }  
         }
         stage('Test') {
             container('test') {
+              stage('test image') {
               steps {                 
                 // Create our project directory.
                 sh 'cd ${GOPATH}/src'
@@ -36,7 +39,8 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
                 sh 'go clean -cache'
                 // Run Unit Tests.
                 sh 'go test ./... -v -short' 
-              }           
+              } 
+              }          
             }
         }
         stage('Publish') {
