@@ -1,11 +1,11 @@
 def POD_LABEL = "testpod-${UUID.randomUUID().toString()}"
 podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
-    containerTemplate(name: 'golang', image: 'golang', ttyEnabled: true, command: 'cat')
-
-  ],
+        containerTemplate(name: 'golang', image: 'golang')
+    ],
     volumes: [
-        hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock']
-  ])
+        hostPathVolume(mountPath: '/var/run/docker.sock',
+        hostPath: '/var/run/docker.sock',
+    ],
     {
 
     node(POD_LABEL) {
