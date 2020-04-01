@@ -18,6 +18,9 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
                 // Create our project directory.
                 sh 'cd ${GOPATH}/src'
                 sh 'mkdir -p ${GOPATH}/src/hello-world'
+                sh 'echo ${WORKSPACE}'
+                // ls
+                sh 'ls ${WORKSPACE}'
                 // Copy all files in our Jenkins workspace to our project directory.                
                 sh 'cp -r ${WORKSPACE}/* ${GOPATH}/src/hello-world'
                 // Build the app.
