@@ -12,10 +12,10 @@ volumes: [
   ]) {
 
     node(POD_LABEL) {
-        environment {
-            registry = "sphenrie/k8scicd"
-            GOPATH = "/tmp"
-        }
+
+      withEnv([registry = "sphenrie/k8scicd",
+            GOPATH = "/tmp"]) {
+
         stage('build a go project') {
             container('build') {
                 stage('Build') {
@@ -50,14 +50,11 @@ volumes: [
         }
 
         stage('Publish a Golang project') {
-            environment {
-                registryCredential = '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502'
-            }
             container('docker') {
                 stage('Publish') {
 
                     def appimage = docker.build registry + ":$BUILD_NUMBER"
-                    docker.withRegistry( '', registryCredential ) {
+                    docker.withRegistry( '', '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502' ) {
                         appimage.push()
                         appimage.push('latest')
                     }
@@ -74,6 +71,7 @@ volumes: [
                 }
             }
         }
+      }
     }
 }
 
