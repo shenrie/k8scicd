@@ -1,22 +1,24 @@
-def POD_LABEL = "build-${UUID.randomUUID().toString()}"
-podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
-        containerTemplate(name: 'build', image: 'jfeng45/k8sdemo-backend:1.0', ttyEnabled: true, command: 'cat')
-    ],
-    volumes: [
-        hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
-    ]) {
+pipeline {
+    agent {
 
-    node(POD_LABEL) {
-
-      checkout scm
-
-      environment {
-        registry = "sphenrie/k8scicd"
-        GOPATH = "/tmp"
+      kubernetes {
+        label 'build'  // all your pods will be named with this prefix, followed by a unique id
+        idleMinutes 0  // how long the pod will live after no jobs have run on it
+        yamlFile 'build-pod.yaml'  // path to the pod definition relative to the root of our project 
       }
+    }
+    environment {
+        registry = "sphenrie/k8scicd"
+        GOCACHE = "/tmp"
+    }
+    stages {
         stage('Build') {
-          container('build') {
-            stage('Build a go project') {
+            agent { 
+                docker { 
+                    image 'golang' 
+                }
+            }
+            steps {
                 // Create our project directory.
                 sh 'cd ${GOPATH}/src'
                 sh 'mkdir -p ${GOPATH}/src/hello-world'
@@ -24,12 +26,15 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
                 sh 'cp -r ${WORKSPACE}/* ${GOPATH}/src/hello-world'
                 // Build the app.
                 sh 'go build'               
-            }  
-          }  
+            }     
         }
         stage('Test') {
-          container('build') {
-            stage('Test a go project') {               
+            agent { 
+                docker { 
+                    image 'golang' 
+                }
+            }
+            steps {                 
                 // Create our project directory.
                 sh 'cd ${GOPATH}/src'
                 sh 'mkdir -p ${GOPATH}/src/hello-world'
@@ -40,13 +45,12 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
                 // Run Unit Tests.
                 sh 'go test ./... -v -short'            
             }
-          }
         }
         stage('Publish') {
             environment {
                 registryCredential = '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502'
             }
-            stage('Publish a go project') {  
+            steps{
                 script {
                     def appimage = docker.build registry + ":$BUILD_NUMBER"
                     docker.withRegistry( '', registryCredential ) {
@@ -57,7 +61,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
             }
         }
         stage ('Deploy') {
-            stage('Deploy a go project') {  
+            steps {
                 script{
                     def image_id = registry + ":$BUILD_NUMBER"
                     sh "kubectl set image deployment hello-deployment go-app=${image_id} -n develop --record"
