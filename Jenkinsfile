@@ -56,12 +56,17 @@ pipeline {
                 registryCredential = '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502'
             }
             steps{
-		echo 'PUSHING IMAGE IN CONATAINER'
-                sh "/usr/local/bin/docker images sphenrie/k8scicd"
+                script {
+                    def appimage = docker.build registry + ":$BUILD_NUMBER"
+                    docker.withRegistry( '', registryCredential ) {
+                        appimage.push()
+                        appimage.push('latest')
+                    }
+                }
             }
         }
         stage ('Deploy') {
-	    agent any
+            agent any
             steps {
                 script{
                     def image_id = registry + ":$BUILD_NUMBER"
