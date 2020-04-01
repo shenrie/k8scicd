@@ -48,7 +48,7 @@ pipeline {
         }
         stage('Publish') {
             agent { 
-		label 'app=jenkins'
+		label 'jenkins-master'
             }
             environment {
                 registryCredential = '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502'
@@ -65,7 +65,7 @@ pipeline {
         }
         stage ('Deploy') {
             agent { 
-		label 'app=jenkins'
+		label 'jenkins-master'
             }
             steps {
                 script{
