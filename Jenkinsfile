@@ -14,7 +14,9 @@ pipeline {
     stages {
         stage('Build') {
             agent { 
-		label 'jenkins'
+                docker { 
+                    image 'golang' 
+                }
             }
             steps {
                 // Create our project directory.
@@ -28,7 +30,9 @@ pipeline {
         }
         stage('Test') {
             agent { 
-		label 'jenkins'
+                docker { 
+                    image 'golang' 
+                }
             }
             steps {                 
                 // Create our project directory.
@@ -44,9 +48,7 @@ pipeline {
         }
         stage('Publish') {
             agent { 
-                docker { 
-                    image 'jenkins' 
-                }
+		label 'jenkins'
             }
             environment {
                 registryCredential = '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502'
@@ -63,9 +65,7 @@ pipeline {
         }
         stage ('Deploy') {
             agent { 
-                docker { 
-                    image 'jenkins' 
-                }
+		label 'jenkins'
             }
             steps {
                 script{
