@@ -52,7 +52,7 @@ pipeline {
             }
             steps{
 		echo 'PUSHING IMAGE IN CONATAINER'
-                sh "docker images sphenrie/k8scicd"
+                sh "/usr/local/bin/docker images sphenrie/k8scicd"
             }
         }
         stage ('Deploy') {
