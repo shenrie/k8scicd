@@ -5,6 +5,7 @@ pipeline {
         label 'build'  // all your pods will be named with this prefix, followed by a unique id
         idleMinutes 0  // how long the pod will live after no jobs have run on it
         yamlFile 'build-pod.yaml'  // path to the pod definition relative to the root of our project 
+        defaultContainer 'jnlp'
       }
     }
     environment {
