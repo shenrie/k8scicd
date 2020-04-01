@@ -1,6 +1,6 @@
 def POD_LABEL = "testpod-${UUID.randomUUID().toString()}"
 podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
-        containerTemplate(name: 'golang', image: 'golang')
+        containerTemplate(name: 'build', image: 'jfeng45/k8sdemo-backend:1.0', ttyEnabled: true, command: 'cat')
     ],
     volumes: [
         hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
@@ -12,7 +12,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
         GOCACHE = "/tmp"
       }
         stage('Build') {
-          container('golang') {
+          container('build') {
             steps {
                 // Create our project directory.
                 sh 'cd ${GOPATH}/src'
@@ -25,7 +25,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
           }  
         }
         stage('Test') {
-          container('golang') {
+          container('build') {
             steps {                 
                 // Create our project directory.
                 sh 'cd ${GOPATH}/src'
