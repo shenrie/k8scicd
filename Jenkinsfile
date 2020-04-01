@@ -5,6 +5,17 @@ pipeline {
         idleMinutes 5  // how long the pod will live after no jobs have run on it
         yamlFile 'build-pod.yaml'  // path to the pod definition relative to the root of our project 
         defaultContainer 'jnlp'
+      
+	containerTemplate {
+          name 'docker'
+          image 'jnlp'
+          ttyEnabled true
+          command 'cat'
+        }
+        
+	volumes [
+          hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
+	]
       }
     }
     environment {
@@ -47,11 +58,6 @@ pipeline {
             }
         }
         stage('Publish') {
-            agent { 
-                docker { 
-                    image 'golang' 
-                }
-            }
             environment {
                 registryCredential = '62149d3c-dc3d-4b01-a23c-d0c1cf9d0502'
             }
@@ -66,11 +72,6 @@ pipeline {
             }
         }
         stage ('Deploy') {
-            agent { 
-                docker { 
-                    image 'golang' 
-                }
-            }
             steps {
                 script{
                     def image_id = registry + ":$BUILD_NUMBER"
