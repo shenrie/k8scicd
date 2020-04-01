@@ -14,7 +14,7 @@ volumes: [
 
     node(POD_LABEL) {
 
-      withEnv(['registry=trow.devops-tools/sphenrie/k8scicd',
+      withEnv(['registry=trow.devops-tools:31000/sphenrie/k8scicd',
             'GOCACHE=/tmp']) {
 
         stage('build a go project') {
