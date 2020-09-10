@@ -60,7 +60,7 @@ volumes: [
 
         stage('Deploy a Golang project') {
             container('kubectl')  {  
-                def image_id = "https://registry.app.headsuphealth.com/" + registry + ":$BUILD_NUMBER"
+                def image_id = "registry.app.headsuphealth.com/" + registry + ":$BUILD_NUMBER"
                 sh "kubectl set image deployment hello-deployment go-app=${image_id} -n develop --record"
             }
         }
