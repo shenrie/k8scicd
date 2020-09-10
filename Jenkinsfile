@@ -50,7 +50,7 @@ volumes: [
         stage('Publish a Golang project') {
             container('docker') {
 
-                def appimage = docker.build registry + ":$BUILD_NUMBER"
+                def appimage = docker.build(registry + ":$BUILD_NUMBER", "--network host .")
                 docker.withRegistry( 'https://registry.app.headsuphealth.com', '1f06cab3-1ac3-4ac5-8075-4ca8676f4791' ) {
                     appimage.push()
                     //appimage.push('latest')
