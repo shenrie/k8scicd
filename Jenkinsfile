@@ -20,6 +20,7 @@ volumes: [
         stage('build a go project') {
             container('build') {
 
+                echo "pwd-> ${pwd()}"
                 checkout scm
 
                 // Create our project directory.
