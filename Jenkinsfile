@@ -8,6 +8,7 @@ containers: [
     containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl', command: 'cat', ttyEnabled: true)
   ],
+workspaceVolume: persistentVolumeClaimWorkspaceVolume(claimName: 'phase2body-git-pv-claim', readOnly: false),
 volumes: [
     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
   ]) {
