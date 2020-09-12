@@ -14,9 +14,7 @@ volumes: [
   ]) {
 
     node(POD_LABEL) {
-
-      customWorkspace '/go-project',
-            
+        
       withEnv(['registry=sphenrie/k8scicd',
             'GOCACHE=/tmp']) {
 
